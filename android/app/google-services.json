@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "256065113823",
+    "project_id": "edema-detection",
+    "storage_bucket": "edema-detection.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256065113823:android:abd46487c3f3840392e36a",
+        "android_client_info": {
+          "package_name": "com.example.edemadetection"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZdHpthmvGrKYWUp3Qsi7EkVapaWRZFsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
