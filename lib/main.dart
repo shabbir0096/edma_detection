@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const OnboardingScreens(),
       title: 'Edema Detection',
       initialBinding: InitialBindings(),
       initialRoute: AppRoutes.initialRoute,

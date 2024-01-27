@@ -1,121 +1,138 @@
 import 'dart:ui';
 
+import 'package:edemadetection/screens/login.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:edemadetection/screens/login.dart';
+import 'package:introduction_screen/introduction_screen.dart';
 
-class OnboardingScreens extends StatefulWidget {
-  const OnboardingScreens({Key? key}) : super(key: key);
+class OnBoardingPage extends StatefulWidget {
+  const OnBoardingPage({Key? key}) : super(key: key);
 
   @override
-  State<OnboardingScreens> createState() => _OnboardingScreensState();
+  OnBoardingPageState createState() => OnBoardingPageState();
 }
 
-class _OnboardingScreensState extends State<OnboardingScreens> {
-  final PageController _pageController = PageController(initialPage: 0);
-  final List<Map<String, dynamic>> onboardingPages = [
-    {
-      "image": 'assets/Images/aimedical.jpg',
-      "text": 'Monitor Your Health with Edema Detection',
-    },
-    {
-      "image": 'assets/Images/consultation.jpg',
-      "text": 'Monitor Your Health with Edema Detection',
-    },
-  ];
+class OnBoardingPageState extends State<OnBoardingPage> {
+  final introKey = GlobalKey<IntroductionScreenState>();
+  late final PageController _pageController;
 
-  @override
-  Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(statusBarColor: Colors.white));
-    return Scaffold(
-  appBar: AppBar(
-    backgroundColor: Colors.white,
-    actions: [
-      GestureDetector(
-        onTap: () {
-          // Navigate to the next screen when "SKIP" is clicked
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const LoginView(), // Replace with your login screen
-            ),
-          );
-        },
-        child: const Padding(
-          padding: EdgeInsets.all(12.0),
-          child: Text(
-            'SKIP',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-    ],
-  ),
-  body: Container(
-    decoration: const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [Colors.blueGrey, Colors.deepPurple], // Replace with your desired gradient colors
-      ),
-    ),
-    child: Column(
-      children: [
-        Expanded(
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: onboardingPages.length,
-            itemBuilder: (context, index) {
-              return OnboardingPage(
-                image: onboardingPages[index]['image'],
-                text: onboardingPages[index]['text'],
-              );
-            },
-          ),
-        ),
-      ],
-    ),
-  ),
-);
+  void _onIntroEnd(context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const LoginView()),
+    );
   }
-}
+  @override
+  void initState() {
+    // TODO: implement initState
+    _pageController = PageController();
+    super.initState();
+  }
 
-class OnboardingPage extends StatelessWidget {
-  final String image;
-  final String text;
-
-  const OnboardingPage({
-    Key? key,
-    required this.image,
-    required this.text,
-  }) : super(key: key);
+  Widget _buildImage(String assetName, [double width = 350]) {
+    return Image.asset('assets/Images/$assetName', width: width);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center, // Align content in the center
-      children: [
-        Image.asset(image),
-        const SizedBox(
-          height: 20,
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              color: Colors.white
-            ),
-            textAlign: TextAlign.center,
+    const bodyStyle = TextStyle(fontSize: 19.0);
+
+    const pageDecoration = PageDecoration(
+      titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
+      bodyTextStyle: bodyStyle,
+      bodyPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+      pageColor: Colors.white,
+      imagePadding: EdgeInsets.zero,
+    );
+
+    return SafeArea(
+      child: IntroductionScreen(
+        key: introKey,
+        globalBackgroundColor: Colors.white,
+        allowImplicitScrolling: true,
+        autoScrollDuration: 3000,
+        infiniteAutoScroll: true,
+        globalHeader: Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16, right: 10),
+            child: _buildImage('app_logo.png', 50),
           ),
         ),
-      ],
+        globalFooter: SizedBox(
+          width: double.infinity,
+          height: 60,
+          child: ElevatedButton(
+            child: const Text(
+              'Let\'s go right away!',
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold ,color: Colors.blue),
+            ),
+            onPressed: () => _onIntroEnd(context),
+          ),
+        ),
+        pages: [
+          PageViewModel(
+            title: "Fractional shares",
+            body:
+            "Instead of having to buy an entire share, invest any amount you want.",
+            image: _buildImage('image_1.jpg'),
+            decoration: pageDecoration,
+          ),
+          PageViewModel(
+            title: "Learn as you go",
+            body:
+            "Download the Stockpile app and master the market with our mini-lesson.",
+            image: _buildImage('doctor_consultation_vector.jpg'),
+            decoration: pageDecoration,
+          ),
+
+          PageViewModel(
+            title: "Kids and teens",
+            body:
+            "Kids and teens can track their stocks 24/7 and place trades that you approve.",
+            image: _buildImage('image_3.jpg'),
+            decoration: pageDecoration,
+          ),
+
+          PageViewModel(
+            title: "Kids and teens",
+            body:
+            "Kids and teens can track their stocks 24/7 and place trades that you approve.",
+            image: _buildImage('image_2.jpeg'),
+            decoration: pageDecoration,
+          ),
+        ],
+        onDone: () => _onIntroEnd(context),
+        onSkip: () => _onIntroEnd(context), // You can override onSkip callback
+        showSkipButton: true,
+        skipOrBackFlex: 0,
+        nextFlex: 0,
+        showBackButton: false,
+        //rtl: true, // Display as right-to-left
+        back: const Icon(Icons.arrow_back ,color: Colors.white,),
+        skip: const Text('Skip', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white)),
+        next: const Icon(Icons.arrow_forward , color: Colors.white,),
+        done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600 , color: Colors.white)),
+        curve: Curves.fastLinearToSlowEaseIn,
+        controlsMargin: const EdgeInsets.all(16),
+        controlsPadding: kIsWeb
+            ? const EdgeInsets.all(12.0)
+            : const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
+        dotsDecorator: const DotsDecorator(
+          size: Size(10.0, 10.0),
+          color: Color(0xFFBDBDBD),
+          activeSize: Size(22.0, 10.0),
+          activeShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(25.0)),
+          ),
+        ),
+        dotsContainerDecorator: const ShapeDecoration(
+          color: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          ),
+        ),
+      ),
     );
   }
 }

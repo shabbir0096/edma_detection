@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:edemadetection/screens/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:tflite_flutter/tflite_flutter.dart';
 
 class Screen1 extends StatefulWidget {
   final Items item;
@@ -14,10 +16,28 @@ class Screen1 extends StatefulWidget {
   State<Screen1> createState() => _Screen1State();
 }
 
+
+
 class _Screen1State extends State<Screen1> {
+
+
   File? imageFile;
 
   String? filename;
+  Interpreter? interpreter;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    interpreter!.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +78,8 @@ class _Screen1State extends State<Screen1> {
                     ),
                   )));
   }
+
+
 
   /// Get from gallery
   _getFromGallery() async {

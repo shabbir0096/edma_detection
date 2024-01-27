@@ -20,7 +20,7 @@ class AppRoutes {
     ),
     GetPage(
       name: onBoardingRoute,
-      page: () => const OnboardingScreens(),
+      page: () => const OnBoardingPage(),
     ),
     GetPage(
       name: loginRoute,
