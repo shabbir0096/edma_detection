@@ -249,7 +249,7 @@ class GridDashboard extends StatelessWidget {
   void _navigateToScreen(BuildContext context, Items data) {
     final Map<Items, Widget> screenMap = {
       item1: const CheckEdema(),
-      item2: Screen2(data),
+      item2: DetectionsResult(),
       item3: const DoctorsPageView(),
       item4: Screen4(data),
       item5: const FeedbackPage(),

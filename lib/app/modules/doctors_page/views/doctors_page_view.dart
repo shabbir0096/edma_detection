@@ -28,7 +28,7 @@ class DoctorsPageView extends GetView<DoctorsPageController> {
 class DoctorCard extends StatelessWidget {
   final Doctor doctor;
 
-  DoctorCard({required this.doctor});
+  const DoctorCard({super.key, required this.doctor});
 
   @override
   Widget build(BuildContext context) {
@@ -77,9 +77,11 @@ class DoctorCard extends StatelessWidget {
         shape: BoxShape.circle,
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: NetworkImage(doctor.doctorImage),
+          image: NetworkImage(doctor.docImage),
         ),
+
       ),
+
     );
   }
 

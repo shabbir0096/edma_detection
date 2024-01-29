@@ -5,7 +5,7 @@ class Doctor {
   String hospitalName;
   String consultationTimings;
   String phoneNumber;
-  String doctorImage;
+  String docImage;
   String specialty;
 
   Doctor({
@@ -15,7 +15,7 @@ class Doctor {
     required this.hospitalName,
     required this.consultationTimings,
     required this.phoneNumber,
-    required this.doctorImage,
+    required this.docImage,
     required this.specialty,
   });
 
@@ -27,7 +27,7 @@ class Doctor {
       hospitalName: data['hospitalName'] ?? '',
       consultationTimings: data['consultationTimings'] ?? '',
       phoneNumber: data['phoneNumber'] ?? '',
-      doctorImage: data['doctorImage'] ?? '',
+      docImage: data['docImage'] ?? '',
       specialty: data['specialty'] ?? '',
     );
   }

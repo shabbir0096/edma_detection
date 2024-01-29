@@ -16,6 +16,10 @@ class DoctorsPageController extends GetxController {
       // Handle error if needed
     }
   }
+
+
+
+
   @override
   void onInit() {
     // TODO: implement onInit

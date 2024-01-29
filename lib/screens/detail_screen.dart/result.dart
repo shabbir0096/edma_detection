@@ -1,18 +1,18 @@
 import 'package:edemadetection/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 
-class Screen2 extends StatelessWidget {
-  final Items item;
+class DetectionsResult extends StatelessWidget {
 
-  Screen2(this.item);
+
+  DetectionsResult();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(item.title),
+        title: const Text("Detection Result"),
       ),
-      body: Center(
+      body: const Center(
         child: Text("Screen 2 content"),
       ),
     );

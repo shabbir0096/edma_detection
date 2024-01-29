@@ -15,7 +15,7 @@ class _CheckEdemaState extends State<CheckEdema> {
   Widget build(BuildContext context) {
     return Scaffold( appBar: AppBar(
       title: const Text('Check Edema'),
-    ),body: Center(child: SizedBox(height: 180 , child: GridDashboard())));
+    ),body: Center(child: SizedBox(height: 200 , child: GridDashboard())));
   }
 }
 
@@ -41,7 +41,7 @@ class GridDashboard extends StatelessWidget {
     List<Items> myList = [item1, item2];
     return GridView.count(
       childAspectRatio: 0.9,
-      padding: const EdgeInsets.only(left: 16, right: 16),
+      padding: const EdgeInsets.only(left: 16, right: 16 ),
       crossAxisCount: 2,
       crossAxisSpacing: 10,
       mainAxisSpacing: 10,

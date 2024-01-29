@@ -26,6 +26,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../../ml_part/helper/image_classification_helper.dart';
+import '../../services/firebase_services.dart';
+import '../../services/upload_file.dart';
 import '../snackbars.dart';
 
 class GalleryScreen extends StatefulWidget {
@@ -42,7 +44,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
   img.Image? image;
   Map<String, double>? classification;
   bool cameraIsAvailable = Platform.isAndroid || Platform.isIOS;
-
+  FirestoreService firestoreService = FirestoreService();
+  String? resultImageURl = '';
+  User? user = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
     imageClassificationHelper = ImageClassificationHelper();
@@ -51,15 +55,16 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   // upload result
-  void resultEdema(String key , double value) async {
-    User? user = FirebaseAuth.instance.currentUser;
+  void resultEdema(String key , double value , String resultImageUrl) async {
+
     try {
       await FirebaseFirestore.instance.collection('edema_results').doc().set({
         'user_id': user!.uid,
         'result': value,
         'key': key,
         'file_type': "gallery",
-        'created_date': user.metadata.creationTime,
+        'result_image_url': resultImageUrl,
+        'created_date': user!.metadata.creationTime,
         'modified_date': '',
         'status': true,
       });
@@ -147,9 +152,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
             children: [
               if (imagePath != null) Image.file(File(imagePath!)),
               if (image == null)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: const Text("Take a photo or choose one from the gallery to "
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("Take a photo or choose one from the gallery to "
                       "inference."),
                 ),
               Column(
@@ -198,10 +203,24 @@ class _GalleryScreenState extends State<GalleryScreen> {
                                       Text(e.value.toStringAsFixed(2)),
                                       const Spacer(),
                                       ElevatedButton(
-                                        onPressed: () {
-                                          resultEdema(e.key, e.value);
+                                        onPressed: () async {
+                                          try {
+                                            UploadResult result = await uploadFile(
+                                                "detection_images/${user!.uid}",
+                                                "detection_image",
+                                                imagePath!);
+                                            resultImageURl = result.downloadURL.toString();
+                                           if(resultImageURl!.isNotEmpty){
+                                             resultEdema(e.key, e.value ,resultImageURl! );
+                                           }else{
+                                             print("file uploading");
+                                           }
+                                          } catch (error) {
+                                            print('Error: $error');
+                                          }
+
                                         },
-                                        child: Text('Save result'),
+                                        child: const Text('Save result'),
                                       ),
                                     ],
                                   ),

@@ -24,6 +24,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../../ml_part/helper/image_classification_helper.dart';
 import '../../modules/doctors_page/views/doctors_page_view.dart';
+import '../../services/upload_file.dart';
 import '../snackbars.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -44,6 +45,9 @@ class CameraScreenState extends State<CameraScreen>
   late ImageClassificationHelper imageClassificationHelper;
   Map<String, double>? classification;
   bool _isProcessing = false;
+  String? resultImageURl = '';
+  User? user = FirebaseAuth.instance.currentUser;
+  XFile? picturePath;
 
   // init camera
   initCamera() {
@@ -72,7 +76,7 @@ class CameraScreenState extends State<CameraScreen>
       setState(() {});
     }
   }
-  void resultEdema(String key , double value) async {
+  void resultEdema(String key , double value , String resultImage) async {
     User? user = FirebaseAuth.instance.currentUser;
     try {
       await FirebaseFirestore.instance.collection('edema_results').doc().set({
@@ -80,6 +84,7 @@ class CameraScreenState extends State<CameraScreen>
         'result': value,
         'file_type': "camera",
         'key': key,
+        'result_image_url': resultImage,
         'created_date': user.metadata.creationTime,
         'modified_date': '',
         'status': true,
@@ -144,6 +149,7 @@ class CameraScreenState extends State<CameraScreen>
       case AppLifecycleState.resumed:
         if (!cameraController.value.isStreamingImages) {
           await cameraController.startImageStream(imageAnalysis);
+          captureAndSavePhoto();
         }
         break;
       default:
@@ -179,7 +185,19 @@ class CameraScreenState extends State<CameraScreen>
       ),
     );
   }
+  Future<void> captureAndSavePhoto() async {
+    try {
+      picturePath = await cameraController.takePicture();
 
+      // 'picture.path' contains the file path of the captured image
+      print('Image captured: ${picturePath!.path}');
+
+      // Now you can use the image path as needed, for example, uploading it to Firebase Storage
+      // or displaying it in your UI.
+    } catch (e) {
+      print('Error capturing photo: $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     // Size size = MediaQuery.of(context).size;
@@ -215,8 +233,22 @@ class CameraScreenState extends State<CameraScreen>
                           Text(e.value.toStringAsFixed(2)),
                           const Spacer(),
                           ElevatedButton(
-                            onPressed: () {
-                              resultEdema(e.key, e.value);
+                            onPressed: () async {
+                              try {
+                                UploadResult result = await uploadFile(
+                                    "detection_images/${user!.uid}",
+                                    "detection_image",
+                                    "$picturePath");
+                                resultImageURl = result.downloadURL.toString();
+                                if(resultImageURl!.isNotEmpty){
+                                  resultEdema(e.key, e.value ,resultImageURl! );
+                                }else{
+                                  print("file uploading");
+                                }
+                              } catch (error) {
+                                print('Error: $error');
+                              }
+
                             },
                             child: Text('Save result'),
                           ),
