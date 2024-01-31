@@ -15,6 +15,8 @@ Future<UploadResult> uploadFile(String refName, String fileName, String filePath
     final Reference ref = firebase_storage.FirebaseStorage.instance.ref(refName).child(fileName);
     final UploadTask uploadTask = ref.putFile(File(filePath));
 
+
+
     final uploadSnapshot = await uploadTask;
 
     final downloadURL = await ref.getDownloadURL();

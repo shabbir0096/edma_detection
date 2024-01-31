@@ -15,6 +15,7 @@
  */
 
 import 'dart:io';
+import 'dart:math';
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -48,6 +49,7 @@ class CameraScreenState extends State<CameraScreen>
   String? resultImageURl = '';
   User? user = FirebaseAuth.instance.currentUser;
   XFile? picturePath;
+  int randomValue = Random().nextInt(1000) + 1;
 
   // init camera
   initCamera() {
@@ -82,7 +84,6 @@ class CameraScreenState extends State<CameraScreen>
       await FirebaseFirestore.instance.collection('edema_results').doc().set({
         'user_id': user!.uid,
         'result': value,
-        'file_type': "camera",
         'key': key,
         'result_image_url': resultImage,
         'created_date': user.metadata.creationTime,
@@ -237,7 +238,7 @@ class CameraScreenState extends State<CameraScreen>
                               try {
                                 UploadResult result = await uploadFile(
                                     "detection_images/${user!.uid}",
-                                    "detection_image",
+                                    "detection_image_$randomValue",
                                     "$picturePath");
                                 resultImageURl = result.downloadURL.toString();
                                 if(resultImageURl!.isNotEmpty){

@@ -247,9 +247,10 @@ class GridDashboard extends StatelessWidget {
   }
 
   void _navigateToScreen(BuildContext context, Items data) {
+    User? user = FirebaseAuth.instance.currentUser;
     final Map<Items, Widget> screenMap = {
       item1: const CheckEdema(),
-      item2: DetectionsResult(),
+      item2: DetectionsResult(userId: user!.uid,),
       item3: const DoctorsPageView(),
       item4: Screen4(data),
       item5: const FeedbackPage(),

@@ -15,6 +15,7 @@
  */
 
 import 'dart:io';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edemadetection/app/modules/doctors_page/views/doctors_page_view.dart';
 import 'package:edemadetection/screens/dashboard.dart';
@@ -47,6 +48,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   FirestoreService firestoreService = FirestoreService();
   String? resultImageURl = '';
   User? user = FirebaseAuth.instance.currentUser;
+  int randomValue = Random().nextInt(1000) + 1;
   @override
   void initState() {
     imageClassificationHelper = ImageClassificationHelper();
@@ -62,7 +64,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
         'user_id': user!.uid,
         'result': value,
         'key': key,
-        'file_type': "gallery",
         'result_image_url': resultImageUrl,
         'created_date': user!.metadata.creationTime,
         'modified_date': '',
@@ -207,7 +208,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                                           try {
                                             UploadResult result = await uploadFile(
                                                 "detection_images/${user!.uid}",
-                                                "detection_image",
+                                                "detection_image_$randomValue",
                                                 imagePath!);
                                             resultImageURl = result.downloadURL.toString();
                                            if(resultImageURl!.isNotEmpty){
